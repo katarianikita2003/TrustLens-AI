@@ -1,3 +1,8 @@
+import { useState } from "react";
+import { Link } from "react-router-dom";
+
+import InvestigationDialog from "./InvestigationDialog";
+
 import {
     Paper,
     Table,
@@ -7,92 +12,290 @@ import {
     TableBody,
     Typography,
     Chip,
+    Avatar,
+    Button,
+    Stack,
+    Tooltip,
+    TableContainer,
 } from "@mui/material";
-import { useState } from "react";
-import InvestigationDialog from "./InvestigationDialog";
 
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import LaunchIcon from "@mui/icons-material/Launch";
 
-export default function InvestigationTable({ investigations }) {
-    if (!investigations || investigations.length === 0) return null;
+export default function InvestigationTable({
+    investigations,
+}) {
 
     const [selected, setSelected] = useState(null);
     const [open, setOpen] = useState(false);
 
+    if (!investigations || investigations.length === 0) {
+
+        return (
+            <Paper
+                sx={{
+                    maxWidth: 1200,
+                    mx: "auto",
+                    mt: 4,
+                    p: 6,
+                    textAlign: "center",
+                }}
+            >
+                <Typography
+                    variant="h5"
+                    gutterBottom
+                >
+                    No Investigations Found
+                </Typography>
+
+                <Typography color="text.secondary">
+                    Submit a product to start your first AI investigation.
+                </Typography>
+
+            </Paper>
+        );
+
+    }
+
     return (
+
         <Paper
+            elevation={3}
             sx={{
-                maxWidth: 1100,
-                margin: "30px auto",
-                padding: 3,
+                maxWidth: 1200,
+                mx: "auto",
+                mt: 4,
+                mb: 5,
+                borderRadius: 3,
+                overflow: "hidden",
             }}
         >
-            <Typography
-                variant="h5"
-                gutterBottom
+
+            <Stack
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
+                sx={{
+                    p: 3,
+                }}
             >
-                Previous Investigations
-            </Typography>
 
-            <Table>
+                <Typography
+                    variant="h5"
+                    fontWeight={700}
+                >
+                    Investigation Queue
+                </Typography>
 
-                <TableHead>
-                    <TableRow>
-                        <TableCell>ID</TableCell>
-                        <TableCell>Product</TableCell>
-                        <TableCell>Violation</TableCell>
-                        <TableCell>Risk Score</TableCell>
-                        <TableCell>Category</TableCell>
-                        <TableCell>Created</TableCell>
-                    </TableRow>
-                </TableHead>
+                <Chip
+                    color="primary"
+                    label={`${investigations.length} Investigations`}
+                />
 
-                <TableBody>
+            </Stack>
 
-                    {investigations.map((item) => (
+            <TableContainer>
 
-                        <TableRow
-                            key={item.id}
-                            hover
-                            sx={{ cursor: "pointer" }}
-                            onClick={() => {
-                                setSelected(item);
-                                setOpen(true);
-                            }}
-                        >
+                <Table>
 
-                            <TableCell>{item.id}</TableCell>
+                    <TableHead>
 
-                            <TableCell>{item.title}</TableCell>
+                        <TableRow>
 
                             <TableCell>
-
-                                <Chip
-                                    label={item.violation ? "YES" : "NO"}
-                                    color={item.violation ? "error" : "success"}
-                                    size="small"
-                                />
-
+                                <strong>ID</strong>
                             </TableCell>
 
                             <TableCell>
-                                {item.risk_score}
+                                <strong>Product</strong>
                             </TableCell>
 
                             <TableCell>
-                                {item.risk_category}
+                                <strong>Status</strong>
                             </TableCell>
 
                             <TableCell>
-                                {new Date(item.created_at).toLocaleString()}
+                                <strong>Risk</strong>
+                            </TableCell>
+
+                            <TableCell>
+                                <strong>Category</strong>
+                            </TableCell>
+
+                            <TableCell>
+                                <strong>Created</strong>
+                            </TableCell>
+
+                            <TableCell align="center">
+                                <strong>Actions</strong>
                             </TableCell>
 
                         </TableRow>
 
-                    ))}
+                    </TableHead>
 
-                </TableBody>
+                    <TableBody>
 
-            </Table>
+                        {investigations.map((item) => (
+
+                            <TableRow
+                                key={item.id}
+                                hover
+                                sx={{
+                                    transition: "0.2s",
+                                    "&:hover": {
+                                        backgroundColor: "#f8fbff",
+                                    },
+                                }}
+                            >
+
+                                <TableCell>
+                                    #{item.id}
+                                </TableCell>
+
+                                <TableCell>
+
+                                    <Stack
+                                        direction="row"
+                                        spacing={2}
+                                        alignItems="center"
+                                    >
+
+                                        <Avatar
+                                            src={
+                                                item.image_path
+                                                    ? `http://127.0.0.1:8000/${item.image_path}`
+                                                    : undefined
+                                            }
+                                            alt={item.title}
+                                            sx={{
+                                                width: 46,
+                                                height: 46,
+                                            }}
+                                        />
+
+                                        <Typography
+                                            fontWeight={600}
+                                        >
+                                            {item.title}
+                                        </Typography>
+
+                                    </Stack>
+
+                                </TableCell>
+
+                                <TableCell>
+
+                                    <Chip
+                                        label={
+                                            item.violation
+                                                ? "Violation"
+                                                : "Approved"
+                                        }
+                                        color={
+                                            item.violation
+                                                ? "error"
+                                                : "success"
+                                        }
+                                        size="small"
+                                    />
+
+                                </TableCell>
+
+                                <TableCell>
+
+                                    <Chip
+                                        label={item.risk_score}
+                                        color={
+                                            item.risk_score >= 80
+                                                ? "error"
+                                                : item.risk_score >= 50
+                                                    ? "warning"
+                                                    : "success"
+                                        }
+                                        size="small"
+                                    />
+
+                                </TableCell>
+
+                                <TableCell>
+
+                                    <Chip
+                                        label={item.risk_category}
+                                        variant="outlined"
+                                        size="small"
+                                    />
+
+                                </TableCell>
+
+                                <TableCell>
+
+                                    {new Date(
+                                        item.created_at
+                                    ).toLocaleString()}
+
+                                </TableCell>
+
+                                <TableCell
+                                    align="center"
+                                >
+
+                                    <Stack
+                                        direction="row"
+                                        spacing={1}
+                                        justifyContent="center"
+                                    >
+
+                                        <Tooltip title="Quick Preview">
+
+                                            <Button
+                                                size="small"
+                                                variant="outlined"
+                                                startIcon={
+                                                    <VisibilityIcon />
+                                                }
+                                                onClick={() => {
+
+                                                    setSelected(item);
+                                                    setOpen(true);
+
+                                                }}
+                                            >
+                                                Preview
+                                            </Button>
+
+                                        </Tooltip>
+
+                                        <Tooltip title="Open Full Investigation">
+
+                                            <Button
+                                                component={Link}
+                                                to={`/investigation/${item.id}`}
+                                                size="small"
+                                                variant="contained"
+                                                endIcon={
+                                                    <LaunchIcon />
+                                                }
+                                            >
+                                                Open
+                                            </Button>
+
+                                        </Tooltip>
+
+                                    </Stack>
+
+                                </TableCell>
+
+                            </TableRow>
+
+                        ))}
+
+                    </TableBody>
+
+                </Table>
+
+            </TableContainer>
+
             <InvestigationDialog
                 open={open}
                 onClose={() => setOpen(false)}
@@ -100,5 +303,7 @@ export default function InvestigationTable({ investigations }) {
             />
 
         </Paper>
+
     );
+
 }

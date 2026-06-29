@@ -4,6 +4,11 @@ import {
     CardContent,
     Typography,
 } from "@mui/material";
+import FolderSpecialIcon from "@mui/icons-material/FolderSpecial";
+import ReportProblemIcon from "@mui/icons-material/ReportProblem";
+import ShieldIcon from "@mui/icons-material/Shield";
+import TrendingUpIcon from "@mui/icons-material/TrendingUp";
+import Box from "@mui/material/Box";
 
 export default function DashboardAnalytics({ investigations }) {
 
@@ -32,107 +37,219 @@ export default function DashboardAnalytics({ investigations }) {
                 color="white"
                 sx={{ mb: 1 }}
             >
-                AI Trust & Safety Dashboard
+                TrustLens Investigation Console
             </Typography>
 
             <Typography
                 color="grey.400"
                 sx={{ mb: 4 }}
             >
-                Monitor product investigations, compliance risks and policy violations.
+                AI-powered marketplace compliance, policy retrieval and risk investigation dashboard.
             </Typography>
 
             <Grid container spacing={3} sx={{ mb: 5 }}>
 
                 <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                     <Card
-                        elevation={4}
+                        elevation={3}
                         sx={{
                             borderRadius: 3,
-                            height: "100%",
+                            transition: "0.25s",
+                            "&:hover": {
+                                transform: "translateY(-4px)",
+                            },
                         }}
                     >
-                        <CardContent>
-                            <Typography color="text.secondary">
-                                Total Investigations
-                            </Typography>
 
-                            <Typography
-                                variant="h3"
-                                fontWeight="bold"
+                        <CardContent>
+
+                            <Box
+                                display="flex"
+                                justifyContent="space-between"
+                                alignItems="center"
                             >
-                                {total}
-                            </Typography>
+
+                                <Box>
+
+                                    <Typography
+                                        color="text.secondary"
+                                    >
+                                        Total Investigations
+                                    </Typography>
+
+                                    <Typography
+                                        variant="h3"
+                                        fontWeight={700}
+                                    >
+                                        {total}
+                                    </Typography>
+
+                                </Box>
+
+                                <FolderSpecialIcon
+                                    color="primary"
+                                    sx={{
+                                        fontSize: 40
+                                    }}
+                                />
+
+                            </Box>
+
+                        </CardContent>
+
+                    </Card>
+                </Grid>
+
+                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                    <Card
+                        elevation={3}
+                        sx={{
+                            borderRadius: 3,
+                            transition: "0.25s",
+                            "&:hover": {
+                                transform: "translateY(-4px)",
+                            },
+                        }}
+                    >
+
+                        <CardContent>
+
+                            <Box
+                                display="flex"
+                                justifyContent="space-between"
+                                alignItems="center"
+                            >
+
+                                <Box>
+
+                                    <Typography
+                                        color="text.secondary"
+                                    >
+                                        Violations
+                                    </Typography>
+
+                                    <Typography
+                                        variant="h3"
+                                        color="error"
+                                        fontWeight={700}
+                                    >
+                                        {violations}
+                                    </Typography>
+                                </Box>
+
+                                <ReportProblemIcon
+                                    color="error"
+                                    sx={{
+                                        fontSize: 40
+                                    }}
+                                />
+
+                            </Box>
                         </CardContent>
                     </Card>
                 </Grid>
 
                 <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                     <Card
-                        elevation={4}
+                        elevation={3}
                         sx={{
                             borderRadius: 3,
-                            height: "100%",
+                            transition: "0.25s",
+                            "&:hover": {
+                                transform: "translateY(-4px)",
+                            },
                         }}
                     >
-                        <CardContent>
-                            <Typography color="text.secondary">
-                                Violations
-                            </Typography>
 
-                            <Typography
-                                variant="h3"
-                                color="error"
+                        <CardContent>
+
+                            <Box
+                                display="flex"
+                                justifyContent="space-between"
+                                alignItems="center"
                             >
-                                {violations}
-                            </Typography>
+
+                                <Box>
+
+                                    <Typography
+                                        color="text.secondary"
+                                    >
+                                        Average Risk
+                                    </Typography>
+
+                                    <Typography
+                                        variant="h3"
+                                        color="warning"
+                                        fontWeight={700}
+                                    >
+                                        {averageRisk}
+                                    </Typography>
+
+                                </Box>
+
+                                <TrendingUpIcon
+                                    color="warning"
+                                    sx={{
+                                        fontSize: 40
+                                    }}
+                                />
+
+                            </Box>
+
                         </CardContent>
+
                     </Card>
                 </Grid>
 
                 <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                     <Card
-                        elevation={4}
+                        elevation={3}
                         sx={{
                             borderRadius: 3,
-                            height: "100%",
+                            transition: "0.25s",
+                            "&:hover": {
+                                transform: "translateY(-4px)",
+                            },
                         }}
                     >
+
                         <CardContent>
-                            <Typography color="text.secondary">
-                                Average Risk
-                            </Typography>
 
-                            <Typography
-                                variant="h3"
-                                color="warning.main"
+                            <Box
+                                display="flex"
+                                justifyContent="space-between"
+                                alignItems="center"
                             >
-                                {averageRisk}
-                            </Typography>
-                        </CardContent>
-                    </Card>
-                </Grid>
 
-                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-                    <Card
-                        elevation={4}
-                        sx={{
-                            borderRadius: 3,
-                            height: "100%",
-                        }}
-                    >
-                        <CardContent>
-                            <Typography color="text.secondary">
-                                Safe Products
-                            </Typography>
+                                <Box>
 
-                            <Typography
-                                variant="h3"
-                                color="success.main"
-                            >
-                                {safe}
-                            </Typography>
+                                    <Typography
+                                        color="text.secondary"
+                                    >
+                                        Safe Products
+                                    </Typography>
+
+                                    <Typography
+                                        variant="h3"
+                                        color="success"
+                                        fontWeight={700}
+                                    >
+                                        {safe}
+                                    </Typography>
+
+                                </Box>
+
+                                <ShieldIcon
+                                    color="success"
+                                    sx={{
+                                        fontSize: 40
+                                    }}
+                                />
+
+                            </Box>
+
                         </CardContent>
+
                     </Card>
                 </Grid>
 

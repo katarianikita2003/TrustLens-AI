@@ -3,104 +3,179 @@ import {
     Grid,
     Typography,
     Chip,
-    Box
+    Box,
+    Stack,
 } from "@mui/material";
 
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import CancelIcon from "@mui/icons-material/Cancel";
+import WarningAmberIcon from "@mui/icons-material/WarningAmber";
+import ShieldIcon from "@mui/icons-material/Shield";
 
 export default function DecisionBanner({
     violation,
     confidence,
     severity,
     riskScore,
-    action
+    action,
 }) {
 
-    const isViolation = violation === true;
+    const isViolation = Boolean(violation);
 
-    const color = isViolation ? "error" : "success";
+    const confidenceValue = Math.round(confidence ?? 0);
+
+    let borderColor = "#2e7d32";
+    let iconColor = "success";
+
+    if (isViolation) {
+        borderColor = "#d32f2f";
+        iconColor = "error";
+    }
+    else if (severity === "Medium") {
+        borderColor = "#ed6c02";
+        iconColor = "warning";
+    }
 
     const title = isViolation
         ? "POLICY VIOLATION DETECTED"
         : "COMPLIANT LISTING";
 
     const subtitle = isViolation
-        ? "This listing requires moderator attention."
-        : "This listing passed all compliance checks.";
+        ? "The AI investigation detected one or more marketplace policy violations. Manual moderation or enforcement is recommended."
+        : "The listing successfully passed all compliance, policy retrieval, vision AI, and risk assessment checks.";
+
+    const statusChipColor = isViolation ? "error" : "success";
 
     return (
 
         <Paper
-            elevation={3}
+            elevation={4}
             sx={{
-                p: 3,
                 mb: 4,
-                borderLeft: `8px solid ${
-                    isViolation ? "#d32f2f" : "#2e7d32"
-                }`
+                p: 4,
+                borderLeft: `10px solid ${borderColor}`,
+                borderRadius: 3,
             }}
         >
 
-            <Grid container spacing={3} alignItems="center">
+            <Grid
+                container
+                spacing={3}
+                alignItems="center"
+            >
 
                 <Grid item>
 
-                    {
-                        isViolation
-                            ? <CancelIcon color="error" sx={{ fontSize: 55 }} />
-                            : <CheckCircleIcon color="success" sx={{ fontSize: 55 }} />
-                    }
+                    {isViolation ? (
+
+                        <CancelIcon
+                            color={iconColor}
+                            sx={{
+                                fontSize: 70,
+                            }}
+                        />
+
+                    ) : (
+
+                        <CheckCircleIcon
+                            color={iconColor}
+                            sx={{
+                                fontSize: 70,
+                            }}
+                        />
+
+                    )}
 
                 </Grid>
 
                 <Grid item xs>
 
-                    <Typography variant="h5" fontWeight="bold">
-
+                    <Typography
+                        variant="h4"
+                        fontWeight={700}
+                    >
                         {title}
-
                     </Typography>
 
-                    <Typography color="text.secondary">
-
+                    <Typography
+                        variant="body1"
+                        color="text.secondary"
+                        sx={{ mt: 1 }}
+                    >
                         {subtitle}
-
                     </Typography>
+
+                </Grid>
+
+                <Grid item>
+
+                    <Chip
+                        icon={<ShieldIcon />}
+                        label={
+                            isViolation
+                                ? "High Priority"
+                                : "Verified Safe"
+                        }
+                        color={statusChipColor}
+                        sx={{
+                            fontWeight: 700,
+                            px: 1,
+                            height: 36,
+                        }}
+                    />
 
                 </Grid>
 
             </Grid>
 
-            <Box
-                mt={3}
-                display="flex"
-                gap={2}
+            <Stack
+                direction="row"
+                spacing={1.5}
                 flexWrap="wrap"
+                useFlexGap
+                sx={{ mt: 4 }}
             >
 
                 <Chip
-                    color={color}
-                    label={`Risk Score: ${riskScore}`}
+                    label={`Risk Score: ${riskScore}/100`}
+                    color={
+                        riskScore >= 80
+                            ? "error"
+                            : riskScore >= 50
+                                ? "warning"
+                                : "success"
+                    }
                 />
 
                 <Chip
-                    color={color}
+                    icon={<WarningAmberIcon />}
                     label={`Severity: ${severity}`}
+                    color={
+                        severity === "Critical"
+                            ? "error"
+                            : severity === "High"
+                                ? "warning"
+                                : "success"
+                    }
                 />
 
                 <Chip
-                    color={color}
-                    label={`Confidence: ${confidence}%`}
+                    label={`AI Confidence: ${confidenceValue}%`}
+                    color="primary"
                 />
 
                 <Chip
-                    color={color}
-                    label={`Action: ${action}`}
+                    label={`Marketplace Action: ${action}`}
+                    color={
+                        action === "Approve"
+                            ? "success"
+                            : action === "Review"
+                                ? "warning"
+                                : "error"
+                    }
                 />
 
-            </Box>
+            </Stack>
 
         </Paper>
 

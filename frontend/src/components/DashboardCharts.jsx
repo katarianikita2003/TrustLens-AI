@@ -4,6 +4,10 @@ import {
     Grid,
     Typography,
 } from "@mui/material";
+import DonutLargeIcon from "@mui/icons-material/DonutLarge";
+import BarChartIcon from "@mui/icons-material/BarChart";
+import TimelineIcon from "@mui/icons-material/Timeline";
+import Box from "@mui/material/Box";
 
 import PieRiskChart from "./charts/PieRiskChart";
 import RiskBarChart from "./charts/RiskBarChart";
@@ -24,16 +28,46 @@ export default function DashboardCharts({ investigations }) {
 
                 <Grid size={{ xs: 12, md: 4 }}>
 
-                    <Card sx={{ height: "100%" }}>
+                    <Card
+                        elevation={3}
+                        sx={{
+                            height: "100%",
+                            borderRadius: 3,
+                            transition: "0.25s",
+                            "&:hover": {
+                                transform: "translateY(-3px)",
+                                boxShadow: 6,
+                            },
+                        }}
+                    >
 
                         <CardContent>
 
-                            <Typography
-                                variant="h6"
-                                gutterBottom
+                            <Box
+                                display="flex"
+                                alignItems="center"
+                                gap={1}
+                                mb={2}
                             >
-                                Product Safety
-                            </Typography>
+
+                                <DonutLargeIcon color="primary" />
+
+                                <Typography
+                                    variant="h6"
+                                    fontWeight={600}
+                                >
+                                    Product Safety Overview
+                                </Typography>
+
+                                <Typography
+                                    variant="body2"
+                                    color="text.secondary"
+                                    sx={{ mb: 2 }}
+                                >
+                                    Distribution of compliant vs violating listings.
+                                </Typography>
+
+                            </Box>
 
                             <PieRiskChart
                                 investigations={investigations}
@@ -47,16 +81,46 @@ export default function DashboardCharts({ investigations }) {
 
                 <Grid size={{ xs: 12, md: 8 }}>
 
-                    <Card sx={{ height: "100%" }}>
+                    <Card
+                        elevation={3}
+                        sx={{
+                            height: "100%",
+                            borderRadius: 3,
+                            transition: "0.25s",
+                            "&:hover": {
+                                transform: "translateY(-3px)",
+                                boxShadow: 6,
+                            },
+                        }}
+                    >
 
                         <CardContent>
 
-                            <Typography
-                                variant="h6"
-                                gutterBottom
+                            <Box
+                                display="flex"
+                                alignItems="center"
+                                gap={1}
+                                mb={2}
                             >
-                                Risk Distribution
-                            </Typography>
+
+                                <BarChartIcon color="warning" />
+
+                                <Typography
+                                    variant="h6"
+                                    fontWeight={600}
+                                >
+                                    Risk Distribution
+                                </Typography>
+
+                                <Typography
+                                    variant="body2"
+                                    color="text.secondary"
+                                    sx={{ mb: 2 }}
+                                >
+                                    Risk score assigned by the AI investigation pipeline.
+                                </Typography>
+
+                            </Box>
 
                             <RiskBarChart
                                 investigations={investigations}
@@ -80,16 +144,40 @@ export default function DashboardCharts({ investigations }) {
 
                 <Grid size={{ xs: 12 }}>
 
-                    <Card>
+                    <Card
+                        elevation={3}
+                        sx={{
+                            borderRadius: 3,
+                        }}
+                    >
 
                         <CardContent>
 
-                            <Typography
-                                variant="h6"
-                                gutterBottom
+                            <Box
+                                display="flex"
+                                alignItems="center"
+                                gap={1}
+                                mb={2}
                             >
-                                Investigation Trend
-                            </Typography>
+
+                                <TimelineIcon color="success" />
+
+                                <Typography
+                                    variant="h6"
+                                    fontWeight={600}
+                                >
+                                    Investigation Trend
+                                </Typography>
+
+                                <Typography
+                                    variant="body2"
+                                    color="text.secondary"
+                                    sx={{ mb: 2 }}
+                                >
+                                    Historical investigation volume over time.
+                                </Typography>
+
+                            </Box>
 
                             <InvestigationTrend
                                 investigations={investigations}

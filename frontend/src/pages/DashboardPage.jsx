@@ -90,13 +90,18 @@ export default function DashboardPage() {
     }, []);
 
     return (
-
         <>
-
             <Header />
 
-            <Container maxWidth="lg">
-
+            <Container
+                maxWidth="xl"
+                sx={{
+                    py: 5,
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 4,
+                }}
+            >
                 <DashboardAnalytics
                     investigations={investigations}
                 />
@@ -114,9 +119,11 @@ export default function DashboardPage() {
                     }}
                 />
 
-                <ResultCard
-                    result={result}
-                />
+                {result && (
+                    <ResultCard
+                        result={result}
+                    />
+                )}
 
                 <InvestigationFilters
                     investigations={investigations}
@@ -139,11 +146,8 @@ export default function DashboardPage() {
                 <InvestigationTable
                     investigations={filteredInvestigations}
                 />
-
             </Container>
-
         </>
-
     );
 
 }

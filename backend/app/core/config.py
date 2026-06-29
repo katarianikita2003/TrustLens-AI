@@ -17,7 +17,10 @@ class Settings(BaseSettings):
 
     VECTOR_DB: str = "faiss"
 
-    DATABASE_URL: str = "sqlite:///trustlens.db"
+    DATABASE_URL: str = os.getenv(
+        "DATABASE_URL",
+        "sqlite:///trustlens.db"
+    )
 
     model_config = SettingsConfigDict(
         env_file=".env",

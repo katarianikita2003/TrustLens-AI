@@ -8,11 +8,21 @@ import {
     Select,
     MenuItem,
     Button,
-    Stack
+    Stack,
+    Typography,
+    InputAdornment,
+    Chip,
 } from "@mui/material";
+
+import SearchIcon from "@mui/icons-material/Search";
+import DownloadIcon from "@mui/icons-material/Download";
+import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
+import RestartAltIcon from "@mui/icons-material/RestartAlt";
+import FilterListIcon from "@mui/icons-material/FilterList";
+
 import {
     exportCSV,
-    exportPDF
+    exportPDF,
 } from "../services/exportService";
 
 export default function InvestigationFilters({
@@ -28,15 +38,68 @@ export default function InvestigationFilters({
     resetFilters,
 }) {
 
+    const categories = [
+        "all",
+        ...new Set(
+            investigations
+                .map((i) => i.risk_category)
+                .filter(Boolean)
+        ),
+    ];
+
     return (
 
-        <Card sx={{ mb: 3 }}>
+        <Card
+            elevation={2}
+            sx={{
+                mb: 4,
+                borderRadius: 3,
+            }}
+        >
 
             <CardContent>
 
-                <Grid container spacing={2}>
+                <Stack
+                    direction="row"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    sx={{ mb: 3 }}
+                >
 
-                    <Grid size={{ xs: 12, md: 3 }}>
+                    <Stack
+                        direction="row"
+                        spacing={1}
+                        alignItems="center"
+                    >
+
+                        <FilterListIcon color="primary" />
+
+                        <Typography
+                            variant="h6"
+                            fontWeight={600}
+                        >
+                            Investigation Filters
+                        </Typography>
+
+                    </Stack>
+
+                    <Chip
+                        color="primary"
+                        label={`${investigations.length} Investigations`}
+                    />
+
+                </Stack>
+
+                <Grid
+                    container
+                    spacing={2}
+                    alignItems="center"
+                >
+
+                    {/* Search */}
+
+                    <Grid item xs={12} md={3}>
+
                         <TextField
                             fullWidth
                             label="Search Product"
@@ -44,20 +107,30 @@ export default function InvestigationFilters({
                             onChange={(e) =>
                                 setSearch(e.target.value)
                             }
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        <SearchIcon />
+                                    </InputAdornment>
+                                ),
+                            }}
                         />
+
                     </Grid>
 
-                    <Grid size={{ xs: 12, md: 2 }}>
+                    {/* Violation */}
+
+                    <Grid item xs={12} sm={6} md={2}>
 
                         <FormControl fullWidth>
 
                             <InputLabel>
-                                Violation
+                                Status
                             </InputLabel>
 
                             <Select
                                 value={violation}
-                                label="Violation"
+                                label="Status"
                                 onChange={(e) =>
                                     setViolation(e.target.value)
                                 }
@@ -72,7 +145,7 @@ export default function InvestigationFilters({
                                 </MenuItem>
 
                                 <MenuItem value="no">
-                                    Safe
+                                    Approved
                                 </MenuItem>
 
                             </Select>
@@ -81,7 +154,9 @@ export default function InvestigationFilters({
 
                     </Grid>
 
-                    <Grid size={{ xs: 12, md: 2 }}>
+                    {/* Category */}
+
+                    <Grid item xs={12} sm={6} md={2}>
 
                         <FormControl fullWidth>
 
@@ -97,13 +172,18 @@ export default function InvestigationFilters({
                                 }
                             >
 
-                                <MenuItem value="all">
-                                    All
-                                </MenuItem>
+                                {categories.map((cat) => (
 
-                                <MenuItem value="Dangerous Goods">
-                                    Dangerous Goods
-                                </MenuItem>
+                                    <MenuItem
+                                        key={cat}
+                                        value={cat}
+                                    >
+                                        {cat === "all"
+                                            ? "All Categories"
+                                            : cat}
+                                    </MenuItem>
+
+                                ))}
 
                             </Select>
 
@@ -111,7 +191,9 @@ export default function InvestigationFilters({
 
                     </Grid>
 
-                    <Grid size={{ xs: 12, md: 2 }}>
+                    {/* Sort */}
+
+                    <Grid item xs={12} sm={6} md={2}>
 
                         <FormControl fullWidth>
 
@@ -128,11 +210,11 @@ export default function InvestigationFilters({
                             >
 
                                 <MenuItem value="newest">
-                                    Newest
+                                    Newest First
                                 </MenuItem>
 
                                 <MenuItem value="oldest">
-                                    Oldest
+                                    Oldest First
                                 </MenuItem>
 
                                 <MenuItem value="highrisk">
@@ -149,43 +231,50 @@ export default function InvestigationFilters({
 
                     </Grid>
 
-                    <Grid
-                        size={{ xs: 12, md: 3 }}
-                        display="flex"
-                        justifyContent="flex-end"
-                        alignItems="center"
-                        gap={2}
-                    >
+                    {/* Buttons */}
+
+                    <Grid item xs={12} md={3}>
 
                         <Stack
-                            direction="row"
-                            spacing={2}
+                            direction={{
+                                xs: "column",
+                                sm: "row",
+                            }}
+                            spacing={1}
+                            justifyContent="flex-end"
                         >
 
                             <Button
                                 variant="contained"
-                                onClick={() => exportCSV(investigations)}
+                                startIcon={<DownloadIcon />}
+                                onClick={() =>
+                                    exportCSV(investigations)
+                                }
                             >
-                                EXPORT CSV
+                                CSV
                             </Button>
 
                             <Button
                                 variant="contained"
                                 color="secondary"
-                                onClick={() => exportPDF(investigations)}
+                                startIcon={<PictureAsPdfIcon />}
+                                onClick={() =>
+                                    exportPDF(investigations)
+                                }
                             >
-                                EXPORT PDF
+                                PDF
+                            </Button>
+
+                            <Button
+                                variant="outlined"
+                                color="error"
+                                startIcon={<RestartAltIcon />}
+                                onClick={resetFilters}
+                            >
+                                Reset
                             </Button>
 
                         </Stack>
-
-                        <Button
-                            variant="outlined"
-                            color="error"
-                            onClick={resetFilters}
-                        >
-                            Reset Filters
-                        </Button>
 
                     </Grid>
 
