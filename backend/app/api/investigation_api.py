@@ -27,11 +27,9 @@ async def analyze_product(
     description: str = Form(...),
     image: UploadFile | None = File(None),
 ):
-
     image_path = None
 
     if image:
-
         os.makedirs("uploads/images", exist_ok=True)
 
         image_path = f"uploads/images/{image.filename}"
@@ -39,13 +37,13 @@ async def analyze_product(
         with open(image_path, "wb") as buffer:
             shutil.copyfileobj(image.file, buffer)
 
-        result = workflow.invoke(
-            {
-                "title": title,
-                "description": description,
-                "image_path": image_path,
-            }
-        )
+    result = workflow.invoke(
+        {
+            "title": title,
+            "description": description,
+            "image_path": image_path,
+        }
+    )
 
     return result["report"]
 
