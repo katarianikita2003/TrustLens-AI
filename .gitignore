@@ -15,6 +15,10 @@ build/
 
 .vscode/
 
+backend/uploads/
+backend/data/policies/
+backend/data/faiss_index/
+
 *.db
 
 .DS_Store
