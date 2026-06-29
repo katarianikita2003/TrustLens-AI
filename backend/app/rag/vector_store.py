@@ -8,7 +8,6 @@ from app.rag.embedding_service import EmbeddingService
 
 class VectorStoreService:
     def __init__(self):
-        self.embedding_service = EmbeddingService()
         self.db_path = Path("data/faiss_index")
 
     def create_documents(
@@ -42,7 +41,7 @@ class VectorStoreService:
 
         vectorstore = FAISS.from_documents(
             documents,
-            self.embedding_service.embedding_model,
+            EmbeddingService.get_model(),
         )
 
         vectorstore.save_local(str(self.db_path))

@@ -3,15 +3,30 @@ from app.core.config import settings
 
 
 class EmbeddingService:
-    def __init__(self):
-        self.embedding_model = HuggingFaceEmbeddings(
-            model_name=settings.EMBEDDING_MODEL,
-            model_kwargs={"device": "cpu"},
-            encode_kwargs={"normalize_embeddings": True},
-        )
 
-    def embed_documents(self, texts):
-        return self.embedding_model.embed_documents(texts)
+    _embedding_model = None
 
-    def embed_query(self, query):
-        return self.embedding_model.embed_query(query)
+    @classmethod
+    def get_model(cls):
+
+        if cls._embedding_model is None:
+
+            print("Loading embedding model...")
+
+            cls._embedding_model = HuggingFaceEmbeddings(
+                model_name=settings.EMBEDDING_MODEL,
+                model_kwargs={"device": "cpu"},
+                encode_kwargs={"normalize_embeddings": True},
+            )
+
+            print("Embedding model loaded.")
+
+        return cls._embedding_model
+
+    @classmethod
+    def embed_documents(cls, texts):
+        return cls.get_model().embed_documents(texts)
+
+    @classmethod
+    def embed_query(cls, query):
+        return cls.get_model().embed_query(query)
