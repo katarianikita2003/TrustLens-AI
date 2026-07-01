@@ -1,5 +1,4 @@
-from app.rag.retriever import RetrieverService
-
+from app.rag.retriever_factory import get_retriever
 
 class RetrievalAgent:
 
@@ -11,7 +10,7 @@ class RetrievalAgent:
 
             print("Initializing Retriever Service...")
 
-            self.__class__._retriever = RetrieverService()
+            self.__class__._retriever = get_retriever()
 
         return self.__class__._retriever
 
@@ -29,7 +28,7 @@ class RetrievalAgent:
 
         for doc, score in results:
 
-            title = (
+            policy_title = (
                 doc.metadata.get("title")
                 if doc.metadata.get("title")
                 else doc.page_content.split(".")[0]
@@ -37,7 +36,7 @@ class RetrievalAgent:
 
             policies.append(
                 {
-                    "title": title,
+                    "title": policy_title,
                     "content": doc.page_content,
                     "similarity": round((1 - score) * 100, 2),
                 }

@@ -11,6 +11,7 @@ from app.database.repository import InvestigationRepository
 from app.graph.workflow import workflow
 from app.models.request_models import ProductRequest
 from fastapi import UploadFile, File, Form
+from app.workflow.events import WorkflowEvents
 
 router = APIRouter()
 
@@ -42,6 +43,7 @@ async def analyze_product(
             "title": title,
             "description": description,
             "image_path": image_path,
+            "events": WorkflowEvents(),
         }
     )
 

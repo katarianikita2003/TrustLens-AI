@@ -14,6 +14,7 @@ from app.database.database import SessionLocal
 from app.database.repository import InvestigationRepository
 from app.agents.image_agent import image_agent
 from app.utils.json_utils import make_json_serializable
+from app.workflow.events import WorkflowEvents
 
 retrieval_agent = RetrievalAgent()
 compliance_agent = ComplianceAgent()
@@ -37,9 +38,15 @@ class GraphState(TypedDict):
     
     image_path: str | None
     image_analysis: dict
+    events: WorkflowEvents
 
 
 def retrieve_node(state: GraphState):
+
+    state["events"].emit(
+        "Policy Retrieval Agent",
+        "Running"
+    )
 
     print("Retrieving policies...")
 
@@ -48,12 +55,22 @@ def retrieve_node(state: GraphState):
         state["description"],
     )
 
+    state["events"].emit(
+        "Policy Retrieval Agent",
+        "Completed"
+    )
+
     return {
         "retrieved_policies": policies
     }
 
 
 def compliance_node(state: GraphState):
+
+    state["events"].emit(
+        "Compliance Agent",
+        "Running"
+    )
 
     print("Running Compliance Agent...")
 
@@ -65,11 +82,21 @@ def compliance_node(state: GraphState):
         image_analysis=state["image_analysis"],
     )
 
+    state["events"].emit(
+        "Compliance Agent",
+        "Completed"
+    )
+
     return {
         "compliance_result": result
     }
 
 def risk_node(state: GraphState):
+
+    state["events"].emit(
+        "Risk Agent",
+        "Running"
+    )
 
     print("Running Risk Agent...")
 
@@ -78,6 +105,11 @@ def risk_node(state: GraphState):
         description=state["description"],
         compliance_result=state["compliance_result"],
         image_analysis=state["image_analysis"],
+    )
+
+    state["events"].emit(
+        "Risk Agent",
+        "Completed"
     )
 
     return {
@@ -125,12 +157,24 @@ def report_node(state: GraphState):
 
     finally:
         db.close()
+    
+    state["events"].emit(
+        "Report Generator",
+        "Completed"
+    )
+
+    report["timeline"] = state["events"].get_events()
 
     return {
         "report": report
     }
 
 def explain_node(state: GraphState):
+
+    state["events"].emit(
+        "Explanation Agent",
+        "Running"
+    )
 
     print("Generating Explanation...")
 
@@ -141,16 +185,31 @@ def explain_node(state: GraphState):
         risk_result=state["risk_result"],
     )
 
+    state["events"].emit(
+        "Explanation Agent",
+        "Completed"
+    )
+
     return {
         "explanation": explanation
     }
     
-def image_node(state):
+def image_node(state: GraphState):
+
+    state["events"].emit(
+        "Vision Agent",
+        "Running"
+    )
 
     print("Running Image Agent...")
 
     result = image_agent.analyze(
         state.get("image_path")
+    )
+
+    state["events"].emit(
+        "Vision Agent",
+        "Completed"
     )
 
     return {
